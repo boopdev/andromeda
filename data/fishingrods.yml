@@ -1,0 +1,79 @@
+
+id: woodenrod # Don't change this unless you want to die :)
+name: Shitty Wooden Rod # Name of the rod
+power: 1 # Power of the rod (increases size of fish)
+level: 0 # Level at which you are allowed to get the rod
+price: 0 # Starter Rod can't be bought, no point in having any value
+fishreq: 0 # Required fish to purchase rod
+
+---
+
+id: weakrod
+name: Weak Wooden Rod
+power: 1
+level: 3
+price: 2500
+fishreq: 20
+
+---
+
+id: bamboopole
+name: Bamboo Pole
+power: 1.2
+level: 7
+price: 10000
+fishreq: 50
+
+---
+
+id: sturdyrod
+name: Sturdy Rod
+power: 1.4
+level: 10
+price: 35000
+fishreq: 100
+
+---
+
+id: metalrod
+name: Metal Rod
+power: 1.7
+level: 15
+price: 60000
+fishreq: 200
+
+---
+
+id: moltenrod
+name: Molten Rod
+power: 2.25
+level: 20
+price: 150000
+fishreq: 500
+
+---
+
+id: radiantrod
+name: Radiant Rod
+power: 2.65
+level: 25
+price: 275000
+fishreq: 850
+
+---
+
+id: rodofshadows
+name: Rod Of Shadows
+power: 3.4
+level: 30
+price: 450000
+fishreq: 1000
+
+---
+
+id: otherworldrod
+name: Rod of the Otherworld
+power: 4
+level: 40
+price: 750000
+fishreq: 1500

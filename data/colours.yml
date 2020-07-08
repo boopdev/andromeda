@@ -1,0 +1,8 @@
+default: 0xd285fc
+monar: 0xffde67
+love: 0xff4e4f
+
+# The only reason these keys are in quotes is because they're considered synonyms for True and False
+# Which is hella gay and idk why the fuck these retards did that this way smh 
+'yes': 0x8cff7c
+'no': 0xff7c7c

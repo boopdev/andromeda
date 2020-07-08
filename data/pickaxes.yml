@@ -1,0 +1,78 @@
+
+# If you update the ID of a pickaxe make sure to update the references to that ID in the database
+# QUERY: UPDATE mining SET pickaxe=(pickaxe id here);
+# to change a specific user's pickaxe:
+# QUERY: UPDATE mining SET pickaxe=(pickaxe id here) WHERE userid=(user id goes here);
+
+
+--- !Pickaxe
+id: wooden_pickaxe # pickaxe id, should never chance
+name: Wooden Pickaxe # Name of the pickaxe, this is shown to the people who use the bot
+level: 0 # Level that use can craft this pickaxe at
+multiplier: 1 # Ore multiplier, Formula: math.floor(multipler*ore rarity) || ex: math.floor(1 * 3) = 3
+ores:
+  - stone
+  - copper
+...
+--- !Pickaxe
+id : stone_pickaxe
+name: Stone Pickaxe
+level: 2
+multiplier: 1
+crafting:
+  stone: 50
+ores:
+  - stone
+  - copper
+  - iron
+...
+--- !Pickaxe
+id : copper_pickaxe
+name: Copper Pickaxe
+level: 4
+multiplier: 1.2
+crafting:
+  copper : 100
+ores:
+  - stone
+  - copper
+  - iron
+  - tin
+...
+--- !Pickaxe
+id : tin_pickaxe
+name : Tin Pickaxe
+level : 5
+multiplier: 1
+crafting:
+  tin: 150
+ores:
+  - copper
+  - iron
+  - tin
+...
+--- !Pickaxe
+id : bronze_pickaxe
+name : Bronze Pickaxe
+level : 7
+multiplier: 1.4
+crafting:
+  tin : 100
+  copper : 300
+ores : 
+  - copper
+  - iron
+  - tin
+...
+--- !Pickaxe
+id : iron_pickaxe
+name : Iron Pickaxe
+level : 10
+multiplier: 1.7
+crafting:
+  iron: 200
+ores : 
+  - iron
+  - tin
+  - tungsten
+...

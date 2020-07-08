@@ -1,0 +1,32 @@
+bot-prefix: ';'
+scarlyst-id: 448571905524498432 
+drop-reward-min: 200
+drop-reward-max: 600
+
+developer-mode: off # Set to 'on' if you want it so that only developers can use the bot
+developer-mode-mod-rank: aru # Change this to the minimum required modrank to use the bot in developer mode
+ignore-cooldowns: off # Set to 'on' if you dont want the rank below to have to abide by cooldowns
+ignore-cooldowns-rank: developer # read above you dumb fucking piece of shit fuck you oh my god you're retarded
+
+gambling-chances: 4 # 1 in `X` chances where X is the value you provide
+
+advanced-wordblock: on # Blocks unicode alternatives to blacklisted words, doesn't work with chinese/japanese chars tho
+advanced-wordblock-threshold: 0.9 # How 'alike' a word has to be to delete it, setting this to 1 makes it need to be the same
+
+bc-clean-prefixes: on # When 'on' cleans messages that start with the prefixes below
+bc-prefixes: # see above headass
+  - ';'
+  - '.'
+bc-safety-limit: 100 # Set this to an expected flood cap in the channel, max amount of messages that will be deleted
+
+pp-length-min: 0 # Minimum size for a pp
+pp-length-max: 24 # Maximum size for a pp
+
+# These are all pretty self explainitory
+mute-logs: null
+warn-logs: null
+ban-logs: null
+kick-logs: null
+delete-logs: null # (Message deletes)
+join-logs: null
+leave-logs: null

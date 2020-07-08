@@ -1,0 +1,7 @@
+!Pickaxe
+crafting: {5: 100}
+id: test_pickaxe
+level: 1
+multiplier: 0
+name: Test Pickaxe
+ores: []

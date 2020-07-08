@@ -1,0 +1,46 @@
+# Welcome to the new modranks definition thingy
+# This should make handling moderation much easier and straight forward
+# And it should also make things more customizable
+
+
+- owner: # Name of the rank
+  id: 559004332851331082 # Id of the role
+  inherit: # Start inheritance definition
+    - '*' # Inherits all
+
+# Boop rank (:
+- developer:
+  id: 668042927880273948
+  inherit:
+    - '*'
+    
+- aru:
+  id: 672309697889566740
+  inherit:
+    - 'admin'
+    - 'mod'
+    - 'intern'
+    - 'channel-mod'
+
+- admin: # Another rank
+  id: 586596197372788920 # That rank's ID
+  inherit:
+    - 'mod' # Can use commands that requires the 'mod' rank
+    - 'channel-mod'
+    - 'intern' 
+
+- mod:
+  id: 566558853660147723
+  inherit:
+    - 'intern'
+    - 'channel-mod'
+
+- intern:
+  id: 602611899657617409
+  inherit:
+    - 'channel-mod'
+
+# Since this one inherits the perms for anything we just don't supply any inheritence roles
+# Aka we remove the 'inherit:' part entirely
+- channel-mod:
+  id: 667958109284859914

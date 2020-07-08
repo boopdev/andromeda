@@ -1,0 +1,37 @@
+id: perch
+name: Perch
+value: 3
+minsize: 1
+maxsize: 4
+level: 0
+exp: 5
+
+---
+
+id: bass
+name: Bass
+value: 6
+minsize: 2
+maxsize: 8
+level: 1
+exp: 8
+
+---
+
+id: trout
+name: Trout
+value: 9
+minsize: 1
+maxsize: 6
+level: 3
+exp: 12
+
+---
+
+id: salmon
+name: Salmon
+value: 14
+minsize: 2
+maxsize: 10
+level: 5
+exp: 15
