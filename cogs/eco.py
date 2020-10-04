@@ -405,7 +405,9 @@ class EconomyCommands(commands.Cog, name="Economy"):
             _c=self.client.get_cog("Economy")
             x=[]
             for i in self.ores:
+                
                 u=await _c.get_ore(i)
+                
                 x.append(u)
             return x
 
@@ -473,6 +475,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
         if not isinstance(ore, self.ecoMiningOre):
             # Creates an ecoMiningOre object for the __eq__ thingy
             ore = self.ecoMiningOre(name=ore, oreid=ore)
+        
 
         c=list(filter(lambda o: o == ore, self.ores))
         return c[0]
@@ -545,7 +548,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
                 content=f"> {ctx.author.mention}",
                 embed = butils.Embed(
                     colour = self.client._colours['monar'],
-                    description = "<:pogS:684134572950421639> **You have the highest tier pickaxe, good work king.**"
+                    description = "\👑 **You have the highest tier pickaxe, good work king.**"
                 ).set_author(
                     name = f"{ctx.author.display_name}", icon_url = ctx.author.avatar_url
                 )
@@ -590,7 +593,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
             except asyncio.TimeoutError:
                 return await m.remove_reaction("🔨")
             else:
-                print("coom")
+                
                 b = {}
                 for o, a in _pickaxe.crafting.items():
                     b[o] = await self.get_ore(o)
@@ -705,8 +708,14 @@ class EconomyCommands(commands.Cog, name="Economy"):
     @commands.command()
     async def mine(self, ctx):
         """Grab a pickaxe and mine some shit you broke ass bitch"""
+
+        
         _mp = await self.get_mining_account(ctx.author)
+
+        
         _mp_ores = await _mp.pickaxe.get_ores()
+
+        
 
         ore = random.choice(_mp_ores)
         
@@ -714,6 +723,8 @@ class EconomyCommands(commands.Cog, name="Economy"):
             1 * ore.rarity * _mp.pickaxe.multiplier,
             3 * ore.rarity * _mp.pickaxe.multiplier
         ))
+
+        
         
         if ore_count < 1: ore_count = 1 # At least one ore should always be mined
         _e=await self.mine_ore(ctx.author, ore, ore_count)
@@ -724,28 +735,36 @@ class EconomyCommands(commands.Cog, name="Economy"):
             
             level = math.floor(get_level(_mp.experience + _e))
             await self.client.db.execute("UPDATE mining SET levelnotif=$2 WHERE userid=$1", ctx.author.id, level+1)
-            _lum += f"<:pogS:684134572950421639> Congrats! You're now level `{level:,}` <:pogS:684134572950421639>"
+            _lum += f"✨ Congrats! You're now level `{level:,}` ✨"
 
             if _mp.pickaxe.next_pickaxe is not None:
                 if _mp.pickaxe.next_pickaxe.level == level:
-                    _lum+=str("\n" + f"<a:kittyS:571052714776330240> **You can now craft a {_mp.pickaxe.next_pickaxe.name}!**")
+                    _lum+=str("\n" + f"\🔓 **You can now craft a {_mp.pickaxe.next_pickaxe.name}!**")
+
+        
 
         _mp = await self.get_mining_account(ctx.author) # refresh data?
+
+        
+
         f = await bImg.make_progress_bar(self.client, round(_mp.levelup_progress))
+
+        
 
         return await ctx.send(
             embed = butils.Embed(
                 description = f"You went mining and found **{ore_count} {ore.name.title()} ore!**\n> You earned `{_e:,} exp`!\n\n{_lum}",
                 colour = self.client._colours['default']
             ).set_author(
-                icon_url = ctx.author.avatar_url, name=f"{ctx.author.display_name} went mining..."
-            ).set_image(
-                url = "attachment://progressbar.jpeg"
+                icon_url = ctx.author.avatar_url,
+                name=f"{ctx.author.display_name} went mining..."
             ).set_footer(
                 text=f"{round(get_experience(_mp.current_level+1) - _mp.experience)} more experience to level {_mp.current_level+1}!",
                 icon_url = self.client.scarlyst.icon_url
+            ).set_image(
+                url = 'attachment://progressbar.jpeg'
             ),
-            file=f
+            file = f
         )
 
     @mine.error
