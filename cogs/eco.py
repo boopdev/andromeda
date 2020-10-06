@@ -563,7 +563,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
 
         # Add ore ingredient requirements
         for i, a in _pickaxe.crafting.items():
-            reqs[f"{a:,} " + i.title()] = _formatted_ores.get(i) >= a
+            reqs[f"{a:,} " + i.title()] = _formatted_ores.get(i, 0) >= a
 
         m = await ctx.send(
             embed = butils.Embed(
