@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS warnings(warnid SERIAL PRIMARY KEY, userid BIGINT, mo
 -- Economy
 CREATE TABLE IF NOT EXISTS eco(userid BIGINT, cash INT, bank INT, robbable BOOLEAN DEFAULT FALSE);
 
+-- Message Rank Bullshit
+CREATE TABLE IF NOT EXISTS messages(userid BIGINT, messages INT, week INT, year INT);
+
 -- COCK
 CREATE TABLE IF NOT EXISTS penises(userid BIGINT, length REAL, prestige INT, sfwon INT, sflost INT);
 
@@ -43,3 +46,10 @@ CREATE TABLE IF NOT EXISTS fishing(userid BIGINT, fishing_rod TEXT, experience I
 CREATE TABLE IF NOT EXISTS fishing_fishes(fishid TEXT UNIQUE, name TEXT, level INTEGER, minsize REAL, maxsize REAL, price INTEGER);
 CREATE TABLE IF NOT EXISTS fishing_leaderboard(userid BIGINT, fishid TEXT UNIQUE, size REAL, caught_at TIMESTAMP);
 
+-- AFK Table
+CREATE TABLE IF NOT EXISTS afk(userid BIGINT, message TEXT, afkat TIMESTAMP);
+
+-- INSERT INTO ore_definitions(name, value, rarity) VALUES ("Stone", 1, 1);
+-- INSERT INTO ore_definitions(name, value, rarity) VALUES ("Copper", 3, 1);
+-- INSERT INTO ore_definitions(name, value, rarity) VALUES ("Tin", 5, 1);
+-- INSERT INTO ore_definitions(name, value, rarity) VALUES ("Tungsten", 8, 1);
