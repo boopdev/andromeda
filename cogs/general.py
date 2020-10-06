@@ -29,7 +29,6 @@ class GeneralCommands(commands.Cog, name="General"):
         # Check for mentions now
         z=filter(lambda q: q['userid'] in [i.id for i in message.mentions], afks)
         z = list(z)
-        print(z)
         if len(z) == 1:
             afk_user = await self.client.fetch_user(z[0]['userid'])
             return await message.channel.send(
