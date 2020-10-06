@@ -6,3 +6,4 @@ typing
 pyyaml
 humanize
 git+https://github.com/Rapptz/discord-ext-menus
+Pillow
