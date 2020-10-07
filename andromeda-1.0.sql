@@ -49,7 +49,5 @@ CREATE TABLE IF NOT EXISTS fishing_leaderboard(userid BIGINT, fishid TEXT UNIQUE
 -- AFK Table
 CREATE TABLE IF NOT EXISTS afk(userid BIGINT, message TEXT, afkat TIMESTAMP);
 
--- INSERT INTO ore_definitions(name, value, rarity) VALUES ("Stone", 1, 1);
--- INSERT INTO ore_definitions(name, value, rarity) VALUES ("Copper", 3, 1);
--- INSERT INTO ore_definitions(name, value, rarity) VALUES ("Tin", 5, 1);
--- INSERT INTO ore_definitions(name, value, rarity) VALUES ("Tungsten", 8, 1);
+-- Marriages Table
+CREATE TABLE IF NOT EXISTS marriages(usera BIGINT, userb BIGINT, marriedat TIMESTAMP);
