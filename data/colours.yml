@@ -1,6 +1,7 @@
-default: 0xd285fc
+default: 0xfabe2d
 monar: 0xffde67
 love: 0xff4e4f
+grey: 0x424242
 
 # The only reason these keys are in quotes is because they're considered synonyms for True and False
 # Which is hella gay and idk why the fuck these retards did that this way smh 
