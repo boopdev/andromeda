@@ -1,6 +1,6 @@
-import discord, asyncio, aiohttp, random, math
+import discord, asyncio, aiohttp, random, math, datetime, humanize
 from discord.ext import commands
-from utils import butils
+from utils import butils, butilsImg
 from utils.smartCD import CooldownType, smart_cooldown, CommandOnCooldown
 
 class FunCommands(commands.Cog, name='Fun'):
@@ -139,6 +139,186 @@ class FunCommands(commands.Cog, name='Fun'):
             )
         )
 
+    async def is_user_married(self, user : discord.Member):
+        x = await self.client.db.fetchrow(
+            "SELECT * FROM marriages WHERE usera = $1 OR userb = $1", user.id
+        )
+        return x
+
+    async def marry_these_hoes(self, usera : discord.User, userb : discord.User):
+        a, b = sorted([usera, userb,], key = lambda u: u.id) # Sort by ID because sex
+        await self.client.db.execute(
+            "INSERT INTO marriages VALUES ($1, $2, CURRENT_TIMESTAMP);",
+            a.id, b.id
+        )
+
+    @commands.command()
+    async def marry(self, ctx, u : discord.Member):
+        """Marry a bitch"""
+        if u == ctx.author:
+            return await ctx.send(
+                f"{ctx.author.mention}... Self-cest, really? You cant marry yourself you lonely fuck, go get some mad bitches like me -boop"
+            )
+
+        if u.bot:
+            return await ctx.send(
+                f"{ctx.author.mention}... You cant marry a robot, that's a little too kinky."
+            )
+
+
+        author_married = await self.is_user_married(ctx.author)
+
+        if author_married is not None:
+            am2w = author_married['usera'] if author_married['usera'] != ctx.author.id else author_married['userb']
+            am2w = await self.client.fetch_user(am2w)
+            return await ctx.send(
+                f"> {ctx.author.mention}",
+                embed = butils.Embed(
+                    colour = self.client._colours['no'],
+                    description = f"Sorry pal, you're already simping **{am2w}**!"
+                ).set_author(
+                    name = "Uh oh!", icon_url = ctx.author.avatar_url
+                )
+            )
+
+        user_married = await self.is_user_married(u)
+
+        if user_married is not None:
+            um2w = user_married['usera'] if user_married['usera'] != u.id else user_married['userb']
+            um2w = await self.client.fetch_user(um2w)
+            return await ctx.send(
+                f"> {ctx.author.mention}",
+                embed = butils.Embed(
+                    colour = self.client._colours['no'],
+                    description = f"Sorry pal, you're already simping **{um2w}**!"
+                ).set_author(
+                    name = "Uh oh!", icon_url = ctx.author.avatar_url
+                )
+            )            
+
+        m = await ctx.send(
+            f"> {u.mention}",
+            embed = butils.Embed(
+                colour = self.client._colours['love'],
+                description = f"{ctx.author.mention} is proposing to you, do you accept?"
+            ).set_footer(
+                text = "Yes and No are the only options.",
+                icon_url = self.client.user.avatar_url
+            ).set_author(
+                name = f"😳 yo {u.display_name.lower()}"
+            )
+        )
+
+        try:
+            bruh = await self.client.wait_for(
+                'message',
+                check = lambda x : x.author.id == u.id and x.channel == ctx.channel and x.content.lower() in ('yes', 'no', 'accept', 'cancel'),
+                timeout = 30
+            )
+        except asyncio.TimeoutError:
+            return await m.edit(
+                content = f"{u.display_name} took too long... ",
+                embed = None
+            )
+        else:
+            if bruh.content.lower() not in ('no', 'cancel'):
+                await self.marry_these_hoes(ctx.author, u)
+
+
+                return await ctx.send(
+                    embed = butils.Embed(
+                        colour = self.client._colours['love'],
+                        description = f"**Congratulations** {ctx.author.display_name} and {u.display_name} are now officially e-married!"
+                    ).set_footer(
+                        text = "Imagine only being able to get discord bitches... lol virgins."
+                    )
+                )
+            return await ctx.send(f"Damn {ctx.author.mention} you got rejected?... guess you're a virgin on discord and irl... lame bro..")
+
+    @commands.command(aliases=['marriedto',])
+    async def married(self, ctx, u : discord.User = None):
+        """Check who a user is married to"""
+
+        if u is None:
+            u = ctx.author
+        
+        m = await self.is_user_married(u)
+
+        if m is None:
+            if u != ctx.author:
+                return await ctx.send(
+                    f"> {ctx.author.mention}",
+                    embed = butils.Embed(
+                        colour = self.client._colours['grey'],
+                        description = f"{u.mention} is not married... it's time to shoot your shot 😳"
+                    )
+                )
+            else:
+                return await ctx.send(
+                    f"> {ctx.author.mention}",
+                    embed = butils.Embed(
+                        colour = self.client._colours['grey'],
+                        description = "You aren't married to anybody. :("
+                    )
+                )
+
+        uobj = await self.client.fetch_user(
+            m['usera'] if m['usera'] != u.id else m['userb']
+        )
+
+        time_passed = datetime.datetime.utcnow() - m['marriedat']
+        humanized = humanize.naturaldelta(time_passed)
+
+        f = await butilsImg.make_progress_bar(
+            self.client, 
+            time_passed.days,
+            _max = 90,
+            color = self.client._colours['love']
+        )
+
+        return await ctx.send(
+            embed = butils.Embed(
+                colour = self.client._colours['love'],
+                description = f"**{u}** is married to **{uobj}**\n\nThey've been married for **{humanized}**!"
+            ).set_image(
+                url = 'attachment://progressbar.jpeg'
+            ),
+            file = f
+        )
+
+    @commands.command()
+    async def divorce(self, ctx):
+        """Divorice the user youre married to"""
+        
+        q = await self.is_user_married(ctx.author)
+
+        if q is None:
+            return await ctx.send(
+                f"> {ctx.author.mention}",
+                embed = butils.Embed(
+                    description = "You're not married? You can't divorce somebody without being married lol.",
+                    colour = self.client._colours['no']
+                ).set_author(
+                    name = "lmao wtf", icon_url = ctx.author.avatar_url
+                )
+            )
+        
+        await self.client.db.execute(
+            "DELETE FROM marriages WHERE usera=$1 OR userb=$1", ctx.author.id
+        )
+
+        was_married_to = q['usera'] if q['usera'] != ctx.author else q['userb']
+        was_married_to = await self.client.fetch_user(was_married_to)
+
+        return await ctx.send(
+            embed = butils.Embed(
+                description = f"{ctx.author.mention} divorced {was_married_to}! Guess it was for the best"
+            ).set_author(
+                name = "Things didnt work out...", icon_url = ctx.author.avatar_url
+            )
+        )
+
+
     class userCock:
         def __init__(self, *args, **kwargs):
             self.userid = kwargs.get('userid', -1)
@@ -181,14 +361,14 @@ class FunCommands(commands.Cog, name='Fun'):
             ).set_author(
                 name = f"{user.display_name}'s penis ({round(_ucock.length, 2)}in.)",
                 icon_url = user.avatar_url
-            ).add_field(
-                name = "Swordfight Statistics",
-                value = f"""
-                Wins: `{_ucock.sfwon:,}`
-                Losses: `{_ucock.sflost:,}`
-                Total Fights: `{_ucock.sftotal:,}`
-                W/L Ratio: `{_ucock.sftotal:,}`
-                """
+            #).add_field( # Temporarily Remove it
+            #    name = "Swordfight Statistics",
+            #    value = f"""
+            #    Wins: `{_ucock.sfwon:,}`
+            #    Losses: `{_ucock.sflost:,}`
+            #    Total Fights: `{_ucock.sftotal:,}`
+            #    W/L Ratio: `{_ucock.sftotal:,}`
+            #    """
             ).set_thumbnail(
                 url = user.avatar_url
             )
