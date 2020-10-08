@@ -323,6 +323,7 @@ class FunCommands(commands.Cog, name='Fun'):
 
     class userCock:
         def __init__(self, *args, **kwargs):
+            self.user = kwargs.get('user', None)
             self.userid = kwargs.get('userid', -1)
             self.length = kwargs.get('length', 0)
             self.sfwon = kwargs.get('sfwon', 0)
@@ -335,7 +336,10 @@ class FunCommands(commands.Cog, name='Fun'):
         @property
         def sftotal(self): return self.sfwon + self.sflost
 
-    async def create_cock_data(self, user : discord.User):
+        @property # Cock Length + Prestige Bonus
+        def rlength(self): return self.length + (self.prestige * 3)
+
+    async def create_cock_data(self, user : discord.Member):
         await self.client.db.execute(
             "INSERT INTO penises VALUES ($1, $2, 0, 0, 0);",
             user.id, random.uniform(
@@ -343,13 +347,13 @@ class FunCommands(commands.Cog, name='Fun'):
             )
         )
         f = await self.client.db.fetchrow("SELECT * FROM penises WHERE userid=$1", user.id)
-        return self.userCock(**f)
+        return self.userCock(user=user, **f)
 
-    async def get_user_cock(self, user : discord.User):
+    async def get_user_cock(self, user : discord.Member):
         _r = await self.client.db.fetchrow("SELECT * FROM penises WHERE userid=$1", user.id)
         if _r is None:
             return await self.create_cock_data(user)
-        return self.userCock(**_r)
+        return self.userCock(user=user, **_r)
 
 
     @commands.group(aliases=['pp', 'cock', 'dick'], invoke_without_command=True)
@@ -363,23 +367,109 @@ class FunCommands(commands.Cog, name='Fun'):
             ).set_author(
                 name = f"{user.display_name}'s penis ({round(_ucock.length, 2)}in.)",
                 icon_url = user.avatar_url
-            #).add_field( # Temporarily Remove it
-            #    name = "Swordfight Statistics",
-            #    value = f"""
-            #    Wins: `{_ucock.sfwon:,}`
-            #    Losses: `{_ucock.sflost:,}`
-            #    Total Fights: `{_ucock.sftotal:,}`
-            #    W/L Ratio: `{_ucock.sftotal:,}`
-            #    """
+            ).add_field( 
+                name = "Swordfight Statistics",
+                value = f"""
+                Wins: `{_ucock.sfwon:,}`
+                Losses: `{_ucock.sflost:,}`
+                Total Fights: `{_ucock.sftotal:,}`
+                W/L Ratio: `{_ucock.wlratio:,}`
+                """
             ).set_thumbnail(
                 url = user.avatar_url
             )
         )
 
-    @smart_cooldown(300)
-    @commands.command()
+    async def swordfight_win(self, winner : userCock, loser : userCock):
+        winnings = loser.length * round(random.uniform(0.1, 0.3), 1)
+        winnings = winnings if winnings > 0 else 0 # Prevent negatives
+
+        print(winner, loser, sep='\t')
+
+        # Remove loser's penis
+        await self.client.db.execute(
+            'UPDATE penises SET length=length-$1, sflost=sflost+1 WHERE userid=$2', winnings, loser.userid
+        )
+
+        await self.client.db.execute(
+            "UPDATE penises SET length=length+$1, sfwon=sfwon+1 WHERE userid=$2", winnings, winner.userid
+        )
+
+        return winnings
+
+    @commands.cooldown(1, 300)
+    @commands.command(aliases=['sf',])
     async def swordfight(self, ctx, user : discord.Member):
         """Swing your 'swords' at eachother, whoever wins gets more cock!"""
+
+        callum_has_a_large_cock = await ctx.send(
+            f"> {user.mention}",
+            embed = butils.Embed(
+                description = f"{ctx.author.mention} has challenged you to a cockfight! Do you accept?"
+            ).set_author(
+                name = "You've been challenged!", icon_url = user.avatar_url
+            ).set_footer(
+                text = "Type yes or no"
+            )
+        )
+
+        try:
+            jess_cant_rap = await self.client.wait_for(
+                'message',
+                check = lambda x: x.author == user and x.content.lower() in ('yes', 'no', 'agree', 'deny'),
+                timeout = 30
+            )
+        except asyncio.TimeoutError:
+            await callum_has_a_large_cock.delete()
+            return await ctx.send(
+                f"Seems like {user.display_name} was too chicken to answer in time..."
+            )
+        else:
+            await callum_has_a_large_cock.delete()
+
+            if jess_cant_rap.content.lower() in ('no', 'deny'):
+                return await ctx.send(
+                    f"> {ctx.author.mention}",
+                    embed = butils.Embed(
+                        description = f"Sorry {ctx.author.display_name}, seems like nobody wants to be within 3 feet of your gargantuan schlong."
+                    ).set_footer(
+                        text = "They denied your challenge", icon_url = ctx.author.avatar_url
+                    )
+                )
+
+            chmsg = await ctx.send(
+                embed = butils.Embed(
+                    description = '<:FahhhS:699140533729099858> Swinging "Swords"...'
+                )
+            )
+            await asyncio.sleep(3) # Some dramatic pausing for effect~
+
+            author_cock = await self.get_user_cock(ctx.author)
+            user_cock = await self.get_user_cock(user)
+
+            winner = random.choices([author_cock, user_cock], weights=[author_cock.rlength, user_cock.rlength])[0]
+            loser = user_cock if winner != user_cock else author_cock
+
+            winnings = await self.swordfight_win(
+                winner = winner,
+                loser = loser
+            )
+
+            return await chmsg.edit(
+                embed = butils.Embed(
+                    description = f"{winner.user.display_name} stole `{round(winnings, 2):,}` inches off of {loser.user.display_name}'s penis! That sucks lol."
+                ).set_author(
+                    name = f"{winner.user.display_name} won the swordfight!"
+                ).set_thumbnail(
+                    url = winner.user.avatar_url
+                )
+            )
+
+            
+
+
+
+            
 
     @commands.command()
     async def hug(self, ctx, user : discord.Member):
