@@ -331,7 +331,14 @@ class FunCommands(commands.Cog, name='Fun'):
             self.prestige = kwargs.get('prestige', 0)
 
         @property
-        def wlratio(self): return self.sfwon / self.sflost
+        def wlratio(self):
+            if self.sfwon != 0 and self.sflost == 0:
+                return self.sfwon
+            elif self.sfwon == 0 and self.sflost != 0:
+                return 0
+            elif self.sftotal == 0:
+                return 0
+            return self.sfwon / self.sflost
 
         @property
         def sftotal(self): return self.sfwon + self.sflost
@@ -397,10 +404,20 @@ class FunCommands(commands.Cog, name='Fun'):
 
         return winnings
 
-    @commands.cooldown(1, 300)
+    @smart_cooldown(300, CooldownType.user)
     @commands.command(aliases=['sf',])
     async def swordfight(self, ctx, user : discord.Member):
         """Swing your 'swords' at eachother, whoever wins gets more cock!"""
+
+        if user == ctx.author:
+            await ctx.send(f"{ctx.author.mention}... you're retarded, aren't you..?")
+            raise commands.BadArgument()
+
+        elif user.bot:
+            await ctx.send(
+                f"{ctx.author.mention}... you can't swordfight bots man, that's just weird."
+            )
+            raise commands.BadArgument()
 
         callum_has_a_large_cock = await ctx.send(
             f"> {user.mention}",
@@ -465,7 +482,23 @@ class FunCommands(commands.Cog, name='Fun'):
                 )
             )
 
-            
+    @swordfight.error
+    async def sf_errors(self, ctx, error):
+        if isinstance(error, CommandOnCooldown):
+            return await ctx.send(
+                content=f"> {ctx.author.mention}",
+                embed = butils.Embed(
+                    description=f"Sorry but your horny ass needs to wait for {error.humanize} before you can wave your dick around again.",
+                    colour=self.client._colours['no']
+                )
+            )
+        else:
+            # Resets cooldown incase of a command fuck up
+            await self.client.db.execute(
+                "DELETE FROM smartcd WHERE userid=$1 AND cmd=$2",
+                ctx.author.id, ctx.command.qualified_name
+            )
+            return await self.client.get_cog("Errors")._handle_errors(ctx, error, fallback=True)    
 
 
 
