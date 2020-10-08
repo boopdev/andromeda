@@ -3,6 +3,8 @@ from discord.ext import commands
 from utils import butils, butilsImg
 from utils.smartCD import CooldownType, smart_cooldown, CommandOnCooldown
 
+_NEKOS_API_ENDPOINT = "https://nekos.life/api/v2"
+
 class FunCommands(commands.Cog, name='Fun'):
     def __init__(self, client):
         self.client = client
@@ -379,6 +381,71 @@ class FunCommands(commands.Cog, name='Fun'):
     async def swordfight(self, ctx, user : discord.Member):
         """Swing your 'swords' at eachother, whoever wins gets more cock!"""
 
+    @commands.command()
+    async def hug(self, ctx, user : discord.Member):
+        """hug somebody"""
+        async with aiohttp.ClientSession() as s:
+            async with s.get('%s/img/hug' % _NEKOS_API_ENDPOINT) as resp:
+                t=await resp.json()
+        return await ctx.send(
+            embed = butils.Embed(
+                timestamp=discord.Embed.Empty
+            ).set_image(
+                url = t['url']
+            ).set_author(
+                name = f"{ctx.author} hugged {user}! 💖",
+                icon_url = ctx.author.avatar_url
+            )
+        )
+    @commands.command()
+    async def kiss(self, ctx, user : discord.Member):
+        """kiss a friend"""
+        async with aiohttp.ClientSession() as s:
+            async with s.get('%s/img/kiss' % _NEKOS_API_ENDPOINT) as resp:
+                t=await resp.json()
+        return await ctx.send(
+            embed = butils.Embed(
+                timestamp=discord.Embed.Empty
+            ).set_image(
+                url = t['url']
+            ).set_author(
+                name = f"{ctx.author} kissed {user}~! 💖",
+                icon_url = ctx.author.avatar_url
+            )
+        )
+
+    @commands.command()
+    async def slap(self, ctx, user : discord.Member):
+        """slap somebody, HARD"""
+        async with aiohttp.ClientSession() as s:
+            async with s.get('%s/img/slap' % _NEKOS_API_ENDPOINT) as resp:
+                t=await resp.json()
+        return await ctx.send(
+            embed = butils.Embed(
+                timestamp=discord.Embed.Empty
+            ).set_image(
+                url = t['url']
+            ).set_author(
+                name = f"{ctx.author.display_name} slapped the absolute fuck outta {user.display_name}. God damn.",
+                icon_url = ctx.author.avatar_url
+            )
+        )
+    @commands.command()
+    async def cuddle(self, ctx, user : discord.Member):
+        """cuddle your homies, no homo."""
+        async with aiohttp.ClientSession() as s:
+            async with s.get('%s/img/cuddle' % _NEKOS_API_ENDPOINT) as resp:
+                t=await resp.json()
+        return await ctx.send(
+            embed = butils.Embed(
+                timestamp=discord.Embed.Empty
+            ).set_image(
+                url = t['url']
+            ).set_author(
+                name = f"{ctx.author.display_name} cuddled {user.display_name}~* 💖",
+                icon_url = ctx.author.avatar_url
+            )
+        )
 
 def setup(client):
     client.add_cog(FunCommands(client))
