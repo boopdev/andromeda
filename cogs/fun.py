@@ -75,14 +75,16 @@ class FunCommands(commands.Cog, name='Fun'):
         )
         _r, _g = {}, {}
         for i in recieved:
+            u=await self.client.fetch_user(i['userid'])
+            if i['recieved'] > 0:
+                _r[u] = i['recieved']
             if len(_r) >= 5: break
-            u=self.client.scarlyst.get_member(i['userid'])
-            _r[u] = i['recieved']
 
         for i in given:
+            u=await self.client.fetch_user(i['userid'])
+            if i['given'] > 0:
+                _g[u] = i['given']
             if len(_g) >= 5: break
-            u=self.client.scarlyst.get_member(i['userid'])
-            _g[u] = i['given']
 
         return await ctx.send(
             embed = butils.Embed(
@@ -103,6 +105,8 @@ class FunCommands(commands.Cog, name='Fun'):
                     ]
                 ),
                 inline=False
+            ).set_thumbnail(
+                url = self.client.scarlyst.icon_url
             )
         )
 
