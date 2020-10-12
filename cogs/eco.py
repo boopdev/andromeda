@@ -489,7 +489,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
 
     async def mine_ore(self, user : discord.User, ore : ecoMiningOre, amount : int):
         _mc_acc = await self.get_mining_account(user)
-        exp_earned = round(ore.base_experience * amount * _mc_acc.pirckaxe.multiplier)
+        exp_earned = round(ore.base_experience * amount * _mc_acc.pickaxe.multiplier)
         await self.client.db.execute("UPDATE mining SET oresmined=oresmined+$1, experience=experience+$3 WHERE userid=$2", amount, user.id, exp_earned)
         q=await self.client.db.fetchrow("SELECT * FROM ores WHERE userid=$1 AND oreid=$2", user.id, ore.oreid)
         if q is None:
