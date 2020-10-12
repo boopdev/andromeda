@@ -26,7 +26,11 @@ class EconomyCommands(commands.Cog, name="Economy"):
             'copper_pickaxe',
             'tin_pickaxe',
             'bronze_pickaxe',
-            'iron_pickaxe'
+            'iron_pickaxe',
+            'tungsten_pickaxe',
+            'gold_pickaxe',
+            'nickel_pickaxe',
+            'amethyst_pickaxe'
         )
 
     @property
