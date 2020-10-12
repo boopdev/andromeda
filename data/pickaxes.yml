@@ -57,22 +57,84 @@ name : Bronze Pickaxe
 level : 7
 multiplier: 1.4
 crafting:
-  tin : 100
-  copper : 300
+  tin : 50
+  copper : 125
 ores : 
   - copper
   - iron
   - tin
+  - tungsten
 ...
 --- !Pickaxe
 id : iron_pickaxe
 name : Iron Pickaxe
 level : 10
-multiplier: 1.7
+multiplier: 1.6
 crafting:
   iron: 200
 ores : 
   - iron
   - tin
   - tungsten
+  - gold
+...
+--- !Pickaxe
+id: tungsten_pickaxe
+name : Tungsten Pickaxe
+level: 14
+multiplier: 2.1
+crafting:
+  tungsten: 225
+ores :
+  - iron
+  - copper
+  - tin
+  - tungsten
+  - gold
+  - nickel
+  - amethyst
+...
+--- !Pickaxe
+id: gold_pickaxe
+name: Gold Pickaxe
+level: 17
+multiplier: 2.3
+crafting:
+  gold: 250
+ores:
+  - iron
+  - tungsten
+  - gold
+  - nickel
+  - amethyst
+  - ruby
+...
+--- !Pickaxe
+id: nickel_pickaxe
+name: Pickle Nickaxe
+level: 20
+mutliplier: 2.5
+crafting:
+  nickel: 275
+ores:
+  - gold
+  - tungsten
+  - amethyst
+  - ruby
+  - nickel
+...
+--- !Pickaxe
+id: amethyst_pickaxe
+name: Amethyst Pickaxe
+level: 24
+multiplier: 2.7
+crafting:
+  amethyst: 325
+ores:
+  - gold
+  - amethyst
+  - ruby
+  - sapphire
+  - gold
+  - nickel
 ...
