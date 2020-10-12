@@ -6,10 +6,10 @@ from data import drops
 
 # ₱ = Points
 
-def get_experience(level : int, exponent : float = 1.4, base : int = 200):
+def get_experience(level : int, exponent : float = 1.4, base : int = 50):
     return base * level ** exponent
 
-def get_level(experience : float, exponent : float = 1.4, base : int = 200):
+def get_level(experience : float, exponent : float = 1.4, base : int = 50):
     return (experience / base) ** (1 / exponent)
 
 # Andromeda Economy**
@@ -38,14 +38,12 @@ class EconomyCommands(commands.Cog, name="Economy"):
         drop_this = random.choice(
             [drops.type_drop,]
         )
-        x = drop_this(channel)
+        x = await drop_this(channel)
         
         _m = await channel.send(
             embed = butils.Embed(
                 description = x.embed_desc,
-                title = x.type_this if not x.hide_answer else discord.Embed.Empty
-            ).set_image(
-                url = x.embed_image
+                title = x.typethis.upper() if not x.hide_answer else discord.Embed.Empty
             )
         )
 
@@ -56,7 +54,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
                 embed = butils.Embed(
                     description = "Nobody grabbed the points drop!"
                 ).set_footer(
-                    text = f"You all missed out on {x.reward:,}₱!",
+                    text = f"You all missed out on {round(x.reward):,}₱!",
                     icon_url = self.client.user.avatar_url
                 )
             )
@@ -68,7 +66,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
             return await channel.send(
                 embed = butils.Embed(
                     title = f"{m.author.display_name} got it!",
-                    description = "Enjoy **{x.reward:,}₱** as a reward!"
+                    description = f"Enjoy **{x.reward:,}₱** as a reward!"
                 ).set_thumbnail(
                     url = m.author.avatar_url
                 )
@@ -428,7 +426,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
 
         @property
         def base_experience(self):
-            bxp = round((self.oreid * ((self._value / (self.oreid + self._rarity)) / self._rarity)+1.5))
+            bxp = round(self._value / (self.rarity * 0.5))
             return bxp if bxp >= 1 else 1
 
         @property
@@ -487,7 +485,7 @@ class EconomyCommands(commands.Cog, name="Economy"):
 
     async def mine_ore(self, user : discord.User, ore : ecoMiningOre, amount : int):
         _mc_acc = await self.get_mining_account(user)
-        exp_earned = round(((ore.base_experience * amount)) * math.floor(1 + round(divmod(_mc_acc.current_level, 2)[0])/2))
+        exp_earned = round(ore.base_experience * amount * _mc_acc.pirckaxe.multiplier)
         await self.client.db.execute("UPDATE mining SET oresmined=oresmined+$1, experience=experience+$3 WHERE userid=$2", amount, user.id, exp_earned)
         q=await self.client.db.fetchrow("SELECT * FROM ores WHERE userid=$1 AND oreid=$2", user.id, ore.oreid)
         if q is None:
