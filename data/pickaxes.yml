@@ -113,7 +113,7 @@ ores:
 id: nickel_pickaxe
 name: Pickle Nickaxe
 level: 20
-mutliplier: 2.5
+multiplier: 2.5
 crafting:
   nickel: 275
 ores:
