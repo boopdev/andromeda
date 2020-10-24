@@ -2,6 +2,7 @@ import discord
 import asyncio
 from discord.ext import commands
 
+from utils import butils
 from utils.smartCD import CommandOnCooldown
 from utils.checks import MissingRequiredRank
 
@@ -44,7 +45,17 @@ class ErrorHandling(commands.Cog, name="Errors"):
                 )
             )
         elif isinstance(error, self.client.get_cog('Settings').IgnoredChannel):
-            return # Silent Error :3
+            return await ctx.send(
+                "> {ctx.author.mention}",
+                embed = butils.Embed(
+                    description = "*Please use <#761136480239747074>*",
+                    colour = self.client._colours['no']
+                ).set_footer(
+                    text = "Commands are disabled in this channel",
+                    icon_url= ctx.author.avatar_url
+                ),
+                delete_after = 3
+            )
         else:
             raise error
 
