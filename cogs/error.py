@@ -43,6 +43,8 @@ class ErrorHandling(commands.Cog, name="Errors"):
                     title = discord.Embed.Empty
                 )
             )
+        elif isinstance(error, self.client.get_cog('Settings').IgnoredChannel):
+            return # Silent Error :3
         else:
             raise error
 
