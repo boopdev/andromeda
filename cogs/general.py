@@ -1,4 +1,4 @@
-import discord, asyncio, humanize
+import discord, asyncio, humanize, datetime
 from discord.ext import commands
 from utils import butils
 
@@ -16,6 +16,12 @@ class GeneralCommands(commands.Cog, name="General"):
 
         # Check for author message first
         if message.author.id in [z['userid'] for z in afks]:
+
+            x = [z for z in afks if z['userid'] == message.author.id][0]
+            if x['afkat'] + datetime.timedelta(seconds=5) > datetime.datetime.utcnow():
+                return # 1 Minute delay before unset
+
+
             await self.unset_afk(message.author)
             return await message.channel.send(
                     f"> {message.author.mention}",
