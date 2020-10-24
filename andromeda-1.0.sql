@@ -51,3 +51,6 @@ CREATE TABLE IF NOT EXISTS afk(userid BIGINT, message TEXT, afkat TIMESTAMP);
 
 -- Marriages Table
 CREATE TABLE IF NOT EXISTS marriages(usera BIGINT, userb BIGINT, marriedat TIMESTAMP);
+
+-- Ignore Channels (No more pesky cmds in general lol)
+CREATE TABLE IF NOT EXISTS ignores(channelid BIGINT);
