@@ -42,7 +42,7 @@ class GamblingCog(commands.Cog, name="Gambling"):
 
         w = random.choices(
             population=[None] + list(self.slot1wins.keys()),
-            weights=[math.ceil(len(self.slot1wins) * 1.55)] + [-3 * math.log(i) + 10 for i, x in enumerate(self.slot1wins, start=1)],
+            weights=[math.ceil(len(self.slot1wins) * 1.7)] + [-4 * math.log(i) + 10 for i, x in enumerate(self.slot1wins, start=1)],
             k = 1
         )
         w=w[0] # Pop the item from da list
