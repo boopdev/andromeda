@@ -46,7 +46,7 @@ class ErrorHandling(commands.Cog, name="Errors"):
             )
         elif isinstance(error, self.client.get_cog('Settings').IgnoredChannel):
             return await ctx.send(
-                "> {ctx.author.mention}",
+                f"> {ctx.author.mention}",
                 embed = butils.Embed(
                     description = "*Please use <#761136480239747074>*",
                     colour = self.client._colours['no']
