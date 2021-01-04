@@ -9,6 +9,26 @@ class FunCommands(commands.Cog, name='Fun'):
     def __init__(self, client):
         self.client = client
 
+        self._kill_weapons = [
+            "a fish", "a spoon", "a gun", "their massive cock",
+            "a gigantic breadstick", "excalibur", "a big axe",
+            "many, many fire ants", "a cheap dollarstore squirt gun",
+            "a cactus", "their little pansy fingers", "a stethoscope?",
+            "their nagging", "their bitching", "their sarcastic overtones",
+            "help from nobody other than the infamous Obama", "black power",
+            "afterbirth", "cum, bucketloads of cum", 'their "yogurt"'
+        ]
+
+        # (user) [_kill_adj] (dead dude) with [_kill_wpn].
+
+        self._kill_adjectives = [
+            "brutally murdered", "destroyed", "killed",
+            "plucked out the eyes of", "bashed in the skull of",
+            "ruptured the anus of", "exploded", "imploded",
+            "beat the shit out of", "annihilated", "murded 4 important people and",
+            "accidentally ended the life of"
+        ]
+
     @commands.command(name='bored')
     async def _bored(self, ctx):
         """Bored? Here's something you can do besides wasting our fucking air"""
@@ -541,6 +561,23 @@ class FunCommands(commands.Cog, name='Fun'):
             )
         )
 
+    @commands.command(aliases=['smack'])
+    async def spank(self, ctx, user : discord.Member):
+        """kiss a friend"""
+        async with aiohttp.ClientSession() as s:
+            async with s.get('%s/img/spank' % _NEKOS_API_ENDPOINT) as resp:
+                t=await resp.json()
+        return await ctx.send(
+            embed = butils.Embed(
+                timestamp=discord.Embed.Empty
+            ).set_image(
+                url = t['url']
+            ).set_author(
+                name = f"{ctx.author} spanked {user}...",
+                icon_url = ctx.author.avatar_url
+            )
+        )
+
     @commands.command()
     async def slap(self, ctx, user : discord.Member):
         """slap somebody, HARD"""
@@ -573,6 +610,24 @@ class FunCommands(commands.Cog, name='Fun'):
                 icon_url = ctx.author.avatar_url
             )
         )
+
+    @commands.command()
+    async def kill(self, ctx, *, user : discord.Member):
+        """ Kill somebody """
+        ka = random.choice(self._kill_adjectives)
+        kw = random.choice(self._kill_weapons)
+        if user.id in self.client.owner_ids:
+            return await ctx.send(
+                f"{user} cannot be killed."
+            )
+
+
+        return await ctx.send(
+            embed = butils.Embed(
+                description = f"{ctx.author.mention} {ka} {user.mention} with {kw}."
+            )
+        )
+
 
 def setup(client):
     client.add_cog(FunCommands(client))
