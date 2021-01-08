@@ -261,13 +261,6 @@ class FunCommands(commands.Cog, name='Fun'):
                 )
             return await ctx.send(f"Damn {ctx.author.mention} you got rejected?... guess you're a virgin on discord and irl... lame bro..")
 
-    def fetch_marriage_level(self, days : int):
-        if days == 0: return 0
-        return math.floor( round( 8 ** ( 1 / float(days) ), 2))
-
-    def math_marriage_days_needed(self, level : int):
-        return math.floor(level ** 8)
-
     @commands.command(aliases=['marriedto',])
     async def married(self, ctx, u : discord.User = None):
         """Check who a user is married to"""
@@ -302,19 +295,17 @@ class FunCommands(commands.Cog, name='Fun'):
         time_passed = datetime.datetime.utcnow() - m['marriedat']
         humanized = humanize.naturaldelta(time_passed)
 
-        current_level = self.fetch_marriage_level(time_passed.days)
-
         f = await butilsImg.make_progress_bar(
             self.client, 
-            self.math_marriage_days_needed(current_level) - time_passed.days,
-            _max = self.math_marriage_days_needed(current_level) - self.math_marriage_days_needed(current_level+1),
+            90 if time_passed.days <= 90 else time_passed.days,
+            _max = 90,
             color = self.client._colours['love']
         )
 
         return await ctx.send(
             embed = butils.Embed(
                 colour = self.client._colours['love'],
-                description = f"**{u}** is married to **{uobj}**\n\nThey've been married for **{humanized}**!\nThey're in a level `{current_level:,}` marriage!"
+                description = f"**{u}** is married to **{uobj}**\n\nThey've been married for **{humanized}**!"
             ).set_image(
                 url = 'attachment://progressbar.jpeg'
             ),
